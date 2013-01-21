@@ -1,11 +1,20 @@
-
 # clone/checkout a repo using bash and our loaded ssh-agent
 define dorepos::getrepo (
+
+  # class arguments
+  # ---------------
+  # setup defaults
+
   $provider,
   $path,
   $source,
   $user = 'web',
   $branch = 'master'
+
+  # end of class arguments
+  # ----------------------
+  # begin class
+
 ) {
   # write clone command
   case $provider {
