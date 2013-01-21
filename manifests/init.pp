@@ -37,6 +37,6 @@ class dorepos (
   }
 
   # check out or update all the repos
-  create_resources(docommon::getrepo, $repos, $repos_default)
+  create_resources(dorepos::getrepo, $repos, $repos_default)
 
 }
