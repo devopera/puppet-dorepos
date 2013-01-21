@@ -9,7 +9,8 @@ define dorepos::getrepo (
   $path,
   $source,
   $user = 'web',
-  $branch = 'master'
+  $branch = 'master',
+  $provider_options = '',
 
   # end of class arguments
   # ----------------------
@@ -19,7 +20,7 @@ define dorepos::getrepo (
   # write clone command
   case $provider {
     git: {
-      $command_clone = "git clone -b ${branch}"
+      $command_clone = "git clone ${provider_options} -b ${branch}"
       $command_update = 'git pull'
       $creates_dep = '.git'
     }
