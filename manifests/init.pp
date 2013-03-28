@@ -21,8 +21,9 @@ class dorepos (
   # configure git
   exec { 'git-config' :
     path => '/usr/bin:/bin',
-    command => "export HOME=/home/${user}/; git config --global user.name '$user_git_name'; git config --global user.email '$user_git_email'",
+    command => "export HOME=/home/${user}/; git config --global user.name '$user_git_name'; git config --global user.email '$user_git_email'; git config --global color.ui true",
     provider => 'shell',
+    creates => "/home/${user}/.gitconfig",
     user => $user,
     cwd => "/home/${user}/",
     require => [Package['git-pack'], User['main-user']],
