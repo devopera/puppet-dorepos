@@ -7,6 +7,8 @@ define dorepos::installapp (
     path => '/var/www/git/github.com',
     require => File['/var/www/git/github.com/'], 
   },
+  $user = 'web',
+  $group = 'www-data',
   $byrepo_filewriteable = {},
   
   # undefined variables, set as {} to exclude
@@ -32,6 +34,7 @@ define dorepos::installapp (
   # ensure files directories are web accessible
   $byrepo_filewriteable_defaults = {
     user => $user,
+    group => $group,
     mode => 6660,
     groupfacl => 'rwx',
     recurse => true,
