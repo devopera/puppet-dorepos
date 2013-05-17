@@ -3,6 +3,13 @@ dorepos
 
 Checkout and update repositories using devopera PKI
 
+Changelog
+---------
+
+2013-05-17
+
+ * Changed \; to \\; as puppet recognised former as incorrect escaping
+
 Copyright and License
 ---------------------
 
