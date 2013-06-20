@@ -6,6 +6,10 @@ Checkout and update repositories using devopera PKI
 Changelog
 ---------
 
+2013-06-20
+
+ * git pull now does a git submodule update too
+
 2013-05-17
 
  * Changed \; to \\; as puppet recognised former as incorrect escaping
