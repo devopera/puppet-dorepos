@@ -24,7 +24,7 @@ define dorepos::getrepo (
   case $provider {
     git: {
       $command_clone = "git clone ${provider_options} -b ${branch}"
-      $command_update = 'git pull'
+      $command_update = 'git pull && git submodule update'
       $creates_dep = '.git'
     }
     svn: {
