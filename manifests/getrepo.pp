@@ -14,6 +14,7 @@ define dorepos::getrepo (
   $provider_options = '',
   $force_perms_onsh = true,
   $force_update = true,
+  $symlinkdir = false,
 
   # end of class arguments
   # ----------------------
@@ -46,6 +47,16 @@ define dorepos::getrepo (
     logoutput => true,
     creates => "${path}/${title}/${creates_dep}",
     require => Class['dopki'],
+  }
+  
+  # if this getrepo defines a directory
+  if ($symlinkdir) {
+    # create symlink from directory to repo (e.g. user's home folder)
+    file { "${symlinkdir}/${title}":
+      ensure => 'link',
+      target => "${path}/${title}",
+      require => Exec["clone-${title}"],
+    }
   }
 
   # pull/update repo, incase it did exist

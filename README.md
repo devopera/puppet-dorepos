@@ -6,6 +6,10 @@ Checkout and update repositories using devopera PKI
 Changelog
 ---------
 
+2013-08-26
+
+ * added symlinkdir feature to allow installed repos to put a symlink in another named folder, such as the user's home directory
+
 2013-06-20
 
  * git pull now does a git submodule update too
