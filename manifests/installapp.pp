@@ -12,8 +12,8 @@ define dorepos::installapp (
   $byrepo_filewriteable = {},
   
   # undefined variables, set as {} to exclude
-  # $byrepo_hosts
-  # $byrepo_vhosts
+  $byrepo_hosts = undef,
+  $byrepo_vhosts = undef,
 
   # always refresh repo, host and vhost, even if notifier present
   $refresh = true,
@@ -21,14 +21,18 @@ define dorepos::installapp (
 
   # refresh apache after installing app
   $refresh_apache = true,
+  $symlinkdir = false,
 
 ) {
 
   # checkout extra config from (read-only) appconfig-drupal
   dorepos::getrepo { "$appname" :
+    user => $user,
+    group => $group,
     provider => $repo['provider'],
     path => $repo['path'],
     source => $repo['source'],
+    symlinkdir => $symlinkdir,
   }
 
   # ensure files directories are web accessible
