@@ -6,6 +6,10 @@ Checkout and update repositories using devopera PKI
 Changelog
 ---------
 
+2013-09-17
+
+ * by default, when checking out a repo with submodules, put all submodules on to their master branch
+
 2013-08-26
 
  * added symlinkdir feature to allow installed repos to put a symlink in another named folder, such as the user's home directory
