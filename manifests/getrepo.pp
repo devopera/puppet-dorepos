@@ -44,7 +44,7 @@ define dorepos::getrepo (
   exec { "clone-${title}":
     path => '/usr/bin:/bin',
     provider => 'shell',
-    command => "bash -c 'source /home/${user}/.ssh/environment; ${command_clone} ${source} ${path}/${title} ${command_branch}'",
+    command => "bash -c 'source /home/${user}/.ssh/environment; ${command_clone} ${source} ${path}/${title} && cd ${path}/${title} ${command_branch}'",
     cwd => "/home/${user}",
     user => $user,
     group => $group,
