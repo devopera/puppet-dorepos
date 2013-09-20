@@ -11,9 +11,10 @@ define dorepos::installapp (
   $group = 'www-data',
   $byrepo_filewriteable = {},
   
-  # undefined variables, set as {} to exclude
+  # undefined variables, set as undef to exclude
   $byrepo_hosts = undef,
   $byrepo_vhosts = undef,
+  $byrepo_crontab = undef,
 
   # always refresh repo, host and vhost, even if notifier present
   $refresh = true,
@@ -21,7 +22,12 @@ define dorepos::installapp (
 
   # refresh apache after installing app
   $refresh_apache = true,
+
+  # create symlink and if so, where
   $symlinkdir = false,
+
+  # also install crontabs
+  $install_crontabs = false,
 
 ) {
 
@@ -50,7 +56,7 @@ define dorepos::installapp (
   } 
 
   # dynamically seek out hosts and vhosts
-  if $byrepo_hosts == undef {
+  if ($byrepo_hosts == undef) {
     $byrepo_resolved_hosts = {
       "hosts-$appname" => {
         source => "${repo['path']}/${name}/conf/hosts/*",
@@ -60,7 +66,7 @@ define dorepos::installapp (
     $byrepo_resolved_hosts = $byrepo_hosts
   }
 
-  if $byrepo_vhosts == undef {
+  if ($byrepo_vhosts == undef) {
     $byrepo_resolved_vhosts = {
       "vhosts-$appname" => {
         source => "${repo['path']}/${name}/conf/vhosts/*",
@@ -102,5 +108,30 @@ define dorepos::installapp (
       command => "/sbin/service ${apache::params::apache_name} graceful",
       require => File["puppet-installapp-$appname"],
     }
+  }
+  
+  # if we're supposed to be installing crontabs in this run
+  if ($install_crontabs) {
+    notify { "installing crontabs for ${appname}" : }
+    
+    # aggregate multiple files within single app
+    if ($byrepo_crontab == undef) {
+      $byrepo_resolved_crontab = {
+        "crontab-${appname}" => {
+          directory => "${repo['path']}/${name}/conf/cron",
+        },
+      }
+    } else {
+      $byrepo_resolved_crontab = $byrepo_crontab
+    }
+
+    $byrepo_crontab_defaults = {
+      user => $user,
+      purge => false,
+      require => File["puppet-installapp-$appname"],
+    }
+
+    # concat all files in this /cron/ directory into a single file
+    create_resources(docommon::findcrontab, $byrepo_resolved_crontab, $byrepo_crontab_defaults)
   }
 }

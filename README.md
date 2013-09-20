@@ -6,6 +6,10 @@ Checkout and update repositories using devopera PKI
 Changelog
 ---------
 
+2013-09-20
+
+ * dorepos::installapp can now install apps with their own cron tasks.  By default install_crontabs = false, but it can be set using a resource collector or resource default if you have some kind of cron/automate profile.
+
 2013-09-17
 
  * by default, when checking out a repo with submodules, put all submodules on to their master branch
