@@ -5,7 +5,8 @@ define dorepos::installapp (
   $repo = {
     provider => 'git',
     path => '/var/www/git/github.com',
-    require => File['/var/www/git/github.com/'], 
+    require => File['/var/www/git/github.com/'],
+    provider_options => '--recursive',
   },
   $user = 'web',
   $group = 'www-data',
@@ -36,6 +37,7 @@ define dorepos::installapp (
     user => $user,
     group => $group,
     provider => $repo['provider'],
+    provider_options => $repo['provider_options'],
     path => $repo['path'],
     source => $repo['source'],
     symlinkdir => $symlinkdir,
