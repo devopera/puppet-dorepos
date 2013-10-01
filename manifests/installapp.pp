@@ -27,8 +27,10 @@ define dorepos::installapp (
   # create symlink and if so, where
   $symlinkdir = false,
 
-  # also install crontabs
+  # flags to control installation (crontabs)
   $install_crontabs = false,
+  $install_runscripts = false,
+  $runscript_target = 'puppet-installapp-runscript-output',
 
 ) {
 
@@ -108,6 +110,16 @@ define dorepos::installapp (
     # once all vhosts have been loaded into conf.d, restart apache
     exec { "vhosts-refresh-apache-$appname": 
       command => "/sbin/service ${apache::params::apache_name} graceful",
+      require => File["puppet-installapp-$appname"],
+    }
+  }
+
+  # search repo for installapp_ setup scripts and execute as root
+  # this is turned off by default as it's a major security risk
+  if ($install_runscripts) {
+    exec { "installapp-runscripts-$appname":
+      path => '/usr/bin:/bin',
+      command => "bash -c \"export HOME='/root'; find ${repo['path']}/${name}/ -name 'installapp_*' -exec {} >> ${notifier_dir}/${runscript_target} \; \"",
       require => File["puppet-installapp-$appname"],
     }
   }
