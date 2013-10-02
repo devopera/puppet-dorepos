@@ -29,8 +29,6 @@ define dorepos::installapp (
 
   # flags to control installation (crontabs)
   $install_crontabs = false,
-  $install_runscripts = false,
-  $runscript_target = 'puppet-installapp-runscript-output',
 
 ) {
 
@@ -114,16 +112,6 @@ define dorepos::installapp (
     }
   }
 
-  # search repo for installapp_ setup scripts and execute as root
-  # this is turned off by default as it's a major security risk
-  if ($install_runscripts) {
-    exec { "installapp-runscripts-$appname":
-      path => '/usr/bin:/bin',
-      command => "bash -c \"export HOME='/root'; find ${repo['path']}/${name}/ -name 'installapp_*' -exec {} >> ${notifier_dir}/${runscript_target} \; \"",
-      require => File["puppet-installapp-$appname"],
-    }
-  }
-  
   # if we're supposed to be installing crontabs in this run
   if ($install_crontabs) {
     notify { "installing crontabs for ${appname}" : }
