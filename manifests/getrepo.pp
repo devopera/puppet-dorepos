@@ -12,7 +12,7 @@ define dorepos::getrepo (
   $group = 'www-data',
   $branch = 'master',
   $provider_options = '',
-  $force_perms_onsh = true,
+  $force_perms_onsh = false,
   $force_update = true,
   $force_branch_master = true,
   $symlinkdir = false,

@@ -6,25 +6,29 @@ Checkout and update repositories using devopera PKI
 Changelog
 ---------
 
+2013-10-04
+
+  * stopped forcing permissions by default on checked out shell scripts to +x, because git stores exec permissions in the repo
+
 2013-09-20
 
- * dorepos::installapp can now install apps with their own cron tasks.  By default install_crontabs = false, but it can be set using a resource collector or resource default if you have some kind of cron/automate profile.
+  * dorepos::installapp can now install apps with their own cron tasks.  By default install_crontabs = false, but it can be set using a resource collector or resource default if you have some kind of cron/automate profile.
 
 2013-09-17
 
- * by default, when checking out a repo with submodules, put all submodules on to their master branch
+  * by default, when checking out a repo with submodules, put all submodules on to their master branch
 
 2013-08-26
 
- * added symlinkdir feature to allow installed repos to put a symlink in another named folder, such as the user's home directory
+  * added symlinkdir feature to allow installed repos to put a symlink in another named folder, such as the user's home directory
 
 2013-06-20
 
- * git pull now does a git submodule update too
+  * git pull now does a git submodule update too
 
 2013-05-17
 
- * Changed \; to \\; as puppet recognised former as incorrect escaping
+  * Changed \; to \\; as puppet recognised former as incorrect escaping
 
 Copyright and License
 ---------------------
