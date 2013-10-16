@@ -7,6 +7,7 @@ define dorepos::installapp (
     path => '/var/www/git/github.com',
     require => File['/var/www/git/github.com/'],
     provider_options => '--recursive',
+    force_branch_master => true,
   },
   $user = 'web',
   $group = 'www-data',
@@ -29,7 +30,7 @@ define dorepos::installapp (
 
   # flags to control installation (crontabs)
   $install_crontabs = false,
-
+  
 ) {
 
   # checkout extra config from (read-only) appconfig-drupal
@@ -40,6 +41,7 @@ define dorepos::installapp (
     provider_options => $repo['provider_options'],
     path => $repo['path'],
     source => $repo['source'],
+    force_branch_master => $repo['force_branch_master'],
     symlinkdir => $symlinkdir,
   }
 

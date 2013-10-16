@@ -6,6 +6,10 @@ Checkout and update repositories using devopera PKI
 Changelog
 ---------
 
+2013-10-16
+
+  * getrepo doesn't automatically force submodules on to their master branch, but installapp would if its $repo were not overridden
+
 2013-10-04
 
   * stopped forcing permissions by default on checked out shell scripts to +x, because git stores exec permissions in the repo

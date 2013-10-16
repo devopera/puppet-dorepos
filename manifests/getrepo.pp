@@ -14,7 +14,7 @@ define dorepos::getrepo (
   $provider_options = '',
   $force_perms_onsh = false,
   $force_update = true,
-  $force_branch_master = true,
+  $force_branch_master = false,
   $symlinkdir = false,
 
   # end of class arguments
