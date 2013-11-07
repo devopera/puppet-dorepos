@@ -33,7 +33,7 @@ define dorepos::installapp (
   
 ) {
 
-  # checkout extra config from (read-only) appconfig-drupal
+  # checkout repo
   dorepos::getrepo { "$appname" :
     user => $user,
     group => $group,
