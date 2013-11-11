@@ -108,8 +108,10 @@ define dorepos::installapp (
   
   if ($refresh_apache) {
     # once all vhosts have been loaded into conf.d, restart apache
-    exec { "vhosts-refresh-apache-$appname": 
-      command => "/sbin/service ${apache::params::apache_name} graceful",
+    exec { "vhosts-refresh-apache-$appname":
+      path => '/bin:/usr/bin:/sbin:/usr/sbin',
+      command => "service ${apache::params::apache_name} graceful",
+      tag => ['service-sensitive'],
       require => File["puppet-installapp-$appname"],
     }
   }
