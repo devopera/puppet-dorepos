@@ -13,10 +13,11 @@ define dorepos::installapp (
   $group = 'www-data',
   $byrepo_filewriteable = {},
   
-  # undefined variables, set as undef to exclude
+  # undefined variables, set as undef to use defaults
   $byrepo_hosts = undef,
   $byrepo_vhosts = undef,
-  $byrepo_crontab = undef,
+  $byrepo_crontabs = undef,
+  $byrepo_databases = undef,
 
   # always refresh repo, host and vhost, even if notifier present
   $refresh = true,
@@ -28,8 +29,10 @@ define dorepos::installapp (
   # create symlink and if so, where
   $symlinkdir = false,
 
-  # flags to control installation (crontabs)
+  # flags to control installation
   $install_crontabs = false,
+  $install_databases = false,
+  $install_filesets = false,
   
 ) {
 
@@ -121,23 +124,51 @@ define dorepos::installapp (
     notify { "installing crontabs for ${appname}" : }
     
     # aggregate multiple files within single app
-    if ($byrepo_crontab == undef) {
-      $byrepo_resolved_crontab = {
+    if ($byrepo_crontabs == undef) {
+      $byrepo_resolved_crontabs = {
         "crontab-${appname}" => {
           directory => "${repo['path']}/${name}/conf/cron",
         },
       }
     } else {
-      $byrepo_resolved_crontab = $byrepo_crontab
+      $byrepo_resolved_crontabs = $byrepo_crontabs
     }
 
-    $byrepo_crontab_defaults = {
+    $byrepo_crontabs_defaults = {
       user => $user,
       purge => false,
       require => File["puppet-installapp-$appname"],
     }
 
     # concat all files in this /cron/ directory into a single file
-    create_resources(docommon::findcrontab, $byrepo_resolved_crontab, $byrepo_crontab_defaults)
+    create_resources(docommon::findcrontab, $byrepo_resolved_crontabs, $byrepo_crontabs_defaults)
   }
+
+  # install databases using repo (sensitive) scripts
+  if ($install_databases) {
+    notify { "installing databases for ${appname}" : }
+
+    # identify top-level apply script
+    if ($byrepo_databases == undef) {
+      $byrepo_resolved_databases = {
+        "all-databases-in-one-${appname}" => {
+          directory => "${repo['path']}/${name}/conf/backup/db/",
+          wild => 'installapp_apply_all.sh',
+        },
+      }
+    } else {
+      $byrepo_resolved_databases = $byrepo_databases
+    }
+
+    $byrepo_databases_defaults = {
+      # DB install scripts need to be run as root
+      user => 'root',
+      require => File["puppet-installapp-$appname"],
+    }
+    
+    # execute install DB scripts once only, even though they're sensitive to existing DBs
+    create_resources(docommon::findrunonce, $byrepo_resolved_databases, $byrepo_databases_defaults)
+
+  }
+
 }
