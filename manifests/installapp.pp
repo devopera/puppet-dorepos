@@ -163,6 +163,11 @@ define dorepos::installapp (
     $byrepo_databases_defaults = {
       # DB install scripts need to be run as root
       user => 'root',
+      # need to set root user's home for access to .my.cnf
+      precommand => "export HOME='/root'",
+      # this can be removed to check DB everytime (in installapp_apply scripts)
+      # create a notifier to only run once
+      target => "installapp-databases-all-in-one-${appname}",
       require => File["puppet-installapp-$appname"],
     }
     
