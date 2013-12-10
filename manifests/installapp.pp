@@ -77,7 +77,7 @@ define dorepos::installapp (
     $byrepo_resolved_vhosts = {
       "vhosts-$appname" => {
         source => "${repo['path']}/${name}/conf/vhosts/*",
-        target => "/etc/${apache::params::apache_name}/conf.d/${name}-vhosts.conf",
+        target => "${apache::params::vhost_dir}/${name}-vhosts.conf",
       },
     }
   } else {
