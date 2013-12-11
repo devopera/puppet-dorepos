@@ -78,6 +78,10 @@ define dorepos::installapp (
       "vhosts-$appname" => {
         source => "${repo['path']}/${name}/conf/vhosts/*",
         target => "${apache::params::vhost_dir}/${name}-vhosts.conf",
+        postcommand => $osfamily ? {
+          debian => "a2ensite ${name}-vhosts.conf",
+          default => undef,
+        }
       },
     }
   } else {
