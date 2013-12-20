@@ -26,7 +26,7 @@ class dorepos (
     creates => "/home/${user}/.gitconfig",
     user => $user,
     cwd => "/home/${user}/",
-    require => [Package['git-pack'], User['main-user']],
+    require => [Package['git'], User['main-user']],
   }
 
   # check git access
@@ -34,7 +34,7 @@ class dorepos (
     path => '/usr/bin:/bin',
     provider => 'shell',
     command => "bash -c 'source /home/${user}/.ssh/environment; expect -c \'ssh -T git@github.com\''",
-    require => [Package['git-pack'], User['main-user'], Class['dopki']],
+    require => [Package['git'], User['main-user'], Class['dopki']],
   }
 
   # check out or update all the repos
