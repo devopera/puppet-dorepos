@@ -6,6 +6,10 @@ Checkout and update repositories using devopera PKI
 Changelog
 ---------
 
+2014-01-15
+
+  * replaced nested $repo with $repo_X vars to handle defaults properly
+
 2013-10-16
 
   * getrepo doesn't automatically force submodules on to their master branch, but installapp would if its $repo were not overridden

@@ -2,17 +2,20 @@
 define dorepos::installapp (
 
   $appname = $title,
-  $repo = {
-    provider => 'git',
-    path => '/var/www/git/github.com',
-    require => File['/var/www/git/github.com/'],
-    provider_options => '--recursive',
-    force_branch_master => true,
-  },
   $user = 'web',
   $group = 'www-data',
   $byrepo_filewriteable = {},
-  
+
+  # default repo settings  
+  $repo_source = undef,
+  $repo_provider = 'git',
+  $repo_path = '/var/www/git/github.com',
+  $repo_require = File['/var/www/git/github.com/'],
+  $repo_provider_options = '',
+  $repo_branch = 'master',
+  $repo_submodule_branch = 'master',
+  $repo_force_submodule_branch = false,
+
   # undefined variables, set as undef to use defaults
   $byrepo_hosts = undef,
   $byrepo_vhosts = undef,
@@ -36,16 +39,21 @@ define dorepos::installapp (
   
 ) {
 
-  # checkout repo
-  dorepos::getrepo { "$appname" :
-    user => $user,
-    group => $group,
-    provider => $repo['provider'],
-    provider_options => $repo['provider_options'],
-    path => $repo['path'],
-    source => $repo['source'],
-    force_branch_master => $repo['force_branch_master'],
-    symlinkdir => $symlinkdir,
+  if ($repo_source != undef) {
+    # checkout repo
+    dorepos::getrepo { "$appname" :
+      user => $user,
+      group => $group,
+      provider => $repo_provider,
+      provider_options => $repo_provider_options,
+      path => $repo_path,
+      source => $repo_source,
+      branch => $repo_branch,
+      submodule_branch => $repo_submodule_branch,
+      force_submodule_branch => $repo_force_submodule_branch,
+      symlinkdir => $symlinkdir,
+      require => $repo_require,
+    }
   }
 
   # ensure files directories are web accessible
@@ -66,7 +74,7 @@ define dorepos::installapp (
   if ($byrepo_hosts == undef) {
     $byrepo_resolved_hosts = {
       "hosts-$appname" => {
-        source => "${repo['path']}/${name}/conf/hosts/*",
+        source => "${repo_path}/${name}/conf/hosts/*",
       },
     }
   } else {
@@ -76,7 +84,7 @@ define dorepos::installapp (
   if ($byrepo_vhosts == undef) {
     $byrepo_resolved_vhosts = {
       "vhosts-$appname" => {
-        source => "${repo['path']}/${name}/conf/vhosts/*",
+        source => "${repo_path}/${name}/conf/vhosts/*",
         target => "${apache::params::vhost_dir}/${name}-vhosts.conf",
         postcommand => $osfamily ? {
           debian => "a2ensite ${name}-vhosts.conf",
@@ -131,7 +139,7 @@ define dorepos::installapp (
     if ($byrepo_crontabs == undef) {
       $byrepo_resolved_crontabs = {
         "crontab-${appname}" => {
-          directory => "${repo['path']}/${name}/conf/cron",
+          directory => "${repo_path}/${name}/conf/cron",
         },
       }
     } else {
@@ -156,7 +164,7 @@ define dorepos::installapp (
     if ($byrepo_databases == undef) {
       $byrepo_resolved_databases = {
         "all-databases-in-one-${appname}" => {
-          directory => "${repo['path']}/${name}/conf/backup/db/",
+          directory => "${repo_path}/${name}/conf/backup/db/",
           wild => 'installapp_apply_all.sh',
         },
       }

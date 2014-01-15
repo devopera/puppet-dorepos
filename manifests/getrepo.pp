@@ -14,7 +14,8 @@ define dorepos::getrepo (
   $provider_options = '',
   $force_perms_onsh = false,
   $force_update = true,
-  $force_branch_master = false,
+  $submodule_branch = 'master',
+  $force_submodule_branch = false,
   $symlinkdir = false,
 
   # end of class arguments
@@ -27,9 +28,9 @@ define dorepos::getrepo (
     git: {
       $command_clone = "git clone ${provider_options} -b ${branch}"
       $command_update = 'git pull && git submodule update'
-      if ($force_branch_master) {
-        # put all submodules on to their branch master, stuck on to git clone
-        $command_branch = "&& git submodule foreach git checkout master"
+      if ($force_submodule_branch) {
+        # put all submodules on to the named branch, stuck on to git clone
+        $command_branch = "&& git submodule foreach git checkout ${submodule_branch}"
       }
       $creates_dep = '.git'
     }
