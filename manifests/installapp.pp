@@ -180,12 +180,19 @@ define dorepos::installapp (
       # this can be removed to check DB everytime (in installapp_apply scripts)
       # create a notifier to only run once
       target => "installapp-databases-all-in-one-${appname}",
-      require => File["puppet-installapp-$appname"],
+      require => File["puppet-installapp-${appname}"],
+      before => Exec["puppet-installapp-${appname}-correctperms"],
     }
     
     # execute install DB scripts once only, even though they're sensitive to existing DBs
     create_resources(docommon::findrunonce, $byrepo_resolved_databases, $byrepo_databases_defaults)
 
+    # installapp_apply_all.sh -> calls installapp_apply.sh -> calls apply_snapshot_to_db.sh (as root) so change perms
+    exec { "puppet-installapp-${appname}-correctperms" :
+      path => '/bin:/usr/bin:/sbin:/usr/sbin',
+      command => "find ${repo_path}/${name} -name 'outgoing_database.sql' -exec chown ${user}:${group} {} \;",
+      user => 'root',
+    }
   }
 
 }
