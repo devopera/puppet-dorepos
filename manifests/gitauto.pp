@@ -25,11 +25,12 @@ class dorepos::gitauto (
   }
 
   # append to bashrc
-  exec { 'dorepos-gitauto-activate':
-    path => '/bin:/usr/bin:/sbin:/usr/sbin',
-    command => "echo \"\n# activate git auto-completion \nsource /home/${user}/${script_name}\" >> /home/${user}/.bashrc",
-    onlyif  => "grep -q 'source /home/${user}/${script_name}' /home/${user}/.bashrc; test $? -eq 1",
-    user    => $user,
+  $command_bash_include_gitauto = "\n# activate git auto-completion if present\nif [ -f /home/${user}/.git-completion.bash ]; then\n        source /home/${user}/.git-completion.bash\nfi\n"
+  concat::fragment { 'docommon-bashrc-gitauto':
+    target  => "/home/${user}/.bashrc",
+    content => $command_bash_include_gitauto,
+    order   => '30',
+    require => [Exec['dorepos-gitauto-download']], 
   }
 
 }
