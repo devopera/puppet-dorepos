@@ -1,7 +1,7 @@
 [devopera](http://devopera.com)-[dorepos](http://devopera.com/module/dorepos)
 =======
 
-Checkout and update repositories using Devopera public-key infrastructure (PKI)
+Checkout and update repositories, optionally using Devopera public-key infrastructure (PKI)
 
 Changelog
 ---------
@@ -40,6 +40,25 @@ Changelog
 
 Usage
 -----
+
+Setup dorepos, initially with an empty list of repositories (no repos checked out)
+
+    class { 'dorepos' :
+      user => 'web',
+      user_git_name => 'devopera',
+      user_git_email => 'devopera@example.com',
+      require => [Class['dopki'], Class['dopki::sshagentadd']],
+    }
+
+After setup, checkout a repo
+
+    dorepos::getrepo { 'devopera-docommon-puppet-repo':
+      user => 'web',
+      provider => 'git',
+      path => '/var/www/git/github.com',
+      source => 'git@github.com:devopera/puppet-docommon.git',
+      require => [Class['dorepos'], File['/var/www/git/github.com/']],
+    }
 
 
 Copyright and License
