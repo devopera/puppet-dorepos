@@ -15,6 +15,7 @@ define dorepos::installapp (
   $repo_branch = 'master',
   $repo_submodule_branch = 'master',
   $repo_force_submodule_branch = false,
+  $repo_force_perms_onsh = false,
 
   # undefined variables, set as undef to use defaults
   $byrepo_hosts = undef,
@@ -51,6 +52,7 @@ define dorepos::installapp (
       branch => $repo_branch,
       submodule_branch => $repo_submodule_branch,
       force_submodule_branch => $repo_force_submodule_branch,
+      force_perms_onsh => $repo_force_perms_onsh,
       symlinkdir => $symlinkdir,
       require => $repo_require,
     }
