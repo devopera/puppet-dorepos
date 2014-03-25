@@ -62,7 +62,8 @@ define dorepos::installapp (
   $byrepo_filewriteable_defaults = {
     user => $user,
     group => $group,
-    mode => 6660,
+    mode => 2660,
+    dirmode => 2770,
     groupfacl => 'rwx',
     recurse => true,
     context => 'httpd_sys_content_t',
