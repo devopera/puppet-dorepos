@@ -29,6 +29,7 @@ define dorepos::installapp (
 
   # refresh apache after installing app
   $refresh_apache = true,
+  $refresh_apache_type = 'graceful',
 
   # create symlink and if so, where
   $symlinkdir = false,
@@ -128,7 +129,7 @@ define dorepos::installapp (
     # once all vhosts have been loaded into conf.d, restart apache
     exec { "vhosts-refresh-apache-$appname":
       path => '/bin:/usr/bin:/sbin:/usr/sbin',
-      command => "service ${apache::params::apache_name} graceful",
+      command => "service ${apache::params::apache_name} ${refresh_apache_type}",
       tag => ['service-sensitive'],
       require => File["puppet-installapp-$appname"],
     }
