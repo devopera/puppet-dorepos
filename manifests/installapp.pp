@@ -4,7 +4,6 @@ define dorepos::installapp (
   $appname = $title,
   $user = 'web',
   $group = 'www-data',
-  $byrepo_filewriteable = {},
 
   # default repo settings  
   $repo_source = undef,
@@ -17,11 +16,12 @@ define dorepos::installapp (
   $repo_force_submodule_branch = false,
   $repo_force_perms_onsh = false,
 
-  # undefined variables, set as undef to use defaults
+  # undefined variables, set as undef to use defaults or {} for empty
   $byrepo_hosts = undef,
   $byrepo_vhosts = undef,
   $byrepo_crontabs = undef,
   $byrepo_databases = undef,
+  $byrepo_filewriteable = {},
 
   # always refresh repo, host and vhost, even if notifier present
   $refresh = true,
