@@ -39,6 +39,10 @@ define dorepos::installapp (
   $install_databases = false,
   $install_filesets = false,
   
+  # open up access to port
+  $port = undef,
+  $port_context = 'http_port_t',
+
 ) {
 
   if ($repo_source != undef) {
@@ -196,6 +200,20 @@ define dorepos::installapp (
       path => '/bin:/usr/bin:/sbin:/usr/sbin',
       command => "find ${repo_path}/${name} -name 'outgoing_database.sql' -exec chown ${user}:${group} {} \;",
       user => 'root',
+    }
+  }
+
+  # open a port only if set
+  if ($port) {
+    if (str2bool($::selinux)) {
+      exec { "puppet-installapp-${appname}-selinux-port" :
+        path => '/usr/bin:/bin:/usr/sbin',
+        command => "semanage port -a -t ${port_context} -p tcp ${port}",
+      }
+    }
+    @docommon::fireport { "0${port} $appname service":
+      protocol => 'tcp',
+      port     => $port,
     }
   }
 

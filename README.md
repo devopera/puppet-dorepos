@@ -6,6 +6,10 @@ Checkout and update repositories, optionally using Devopera public-key infrastru
 Changelog
 ---------
 
+2014-05-05
+
+  * added non-standard port handling to installapp
+
 2014-01-15
 
   * replaced nested $repo with $repo_X vars to handle defaults properly
