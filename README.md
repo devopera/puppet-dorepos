@@ -6,6 +6,10 @@ Checkout and update repositories, optionally using Devopera public-key infrastru
 Changelog
 ---------
 
+2014-06-04
+
+  * SELinux port handling with docommon::seport
+
 2014-05-05
 
   * added non-standard port handling to installapp
