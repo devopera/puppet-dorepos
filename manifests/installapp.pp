@@ -206,9 +206,13 @@ define dorepos::installapp (
   # open a port only if set
   if ($port) {
     if (str2bool($::selinux)) {
-      exec { "puppet-installapp-${appname}-selinux-port" :
-        path => '/usr/bin:/bin:/usr/sbin',
-        command => "semanage port -a -t ${port_context} -p tcp ${port}",
+      # exec { "puppet-installapp-${appname}-selinux-port" :
+      #   path => '/usr/bin:/bin:/usr/sbin',
+      #   command => "semanage port -a -t ${port_context} -p tcp ${port}",
+      # }
+      docommon::seport { "tcp/${port}":
+        port => $port,
+        seltype => $port_context,
       }
     }
     @docommon::fireport { "0${port} $appname service":
