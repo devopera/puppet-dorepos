@@ -17,7 +17,7 @@ class dorepos::gitauto (
   # download git-autocomplete script to home directory
   exec { 'dorepos-gitauto-download' :
     path => '/bin:/usr/bin:/sbin:/usr/sbin',
-    command => "curl ${script_download_path} -o /home/${user}/${script_name} && chmod 0700 /home/${user}/${script_name}",
+    command => "wget ${script_download_path} -O /home/${user}/${script_name} && chmod 0700 /home/${user}/${script_name}",
     creates => "/home/${user}/${script_name}",
     user => $user,
     group => $user,
