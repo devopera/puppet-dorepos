@@ -54,6 +54,9 @@ define dorepos::getrepo (
     creates => "${path}/${title}/${creates_dep}",
     require => Class['dopki'],
   }
+
+  # no explicit perms on repo
+  # they're inherited from the directory that repo is checked out into
   
   # if this getrepo defines a directory
   if ($symlinkdir) {
