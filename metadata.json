@@ -1,0 +1,14 @@
+{
+  "name": "devopera-dorepos",
+  "version": "0.9.2",
+  "author": "(c) Alex Stanhope, Devopera.com",
+  "summary": "Repository/app installation and configuration module",
+  "license": "Apache License, Version 2.0",
+  "source": "https://github.com/devopera/puppet-dorepos",
+  "description": "Checkout and update repositories using Devopera public-key infrastructure (PKI)",
+  "project_page": "http://devopera.com/module/dorepos",
+  "issues_url": "https://github.com/devopera/puppet-dorepos/issues",
+  "dependencies": [
+    {"name":"devopera/docommon","version_requirement":"0.9.2"}
+  ]
+}
