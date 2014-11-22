@@ -5,6 +5,7 @@ define dorepos::getrepo (
   # ---------------
   # setup defaults
 
+  $appname = $title,
   $provider,
   $path,
   $source,
@@ -45,13 +46,13 @@ define dorepos::getrepo (
   exec { "clone-${title}":
     path => '/usr/bin:/bin',
     provider => 'shell',
-    command => "bash -c 'source /home/${user}/.ssh/environment; ${command_clone} ${source} ${path}/${title} && cd ${path}/${title} ${command_branch}'",
+    command => "bash -c 'source /home/${user}/.ssh/environment; ${command_clone} ${source} ${path}/${appname} && cd ${path}/${appname} ${command_branch}'",
     cwd => "/home/${user}",
     user => $user,
     group => $group,
     timeout => 0,
     logoutput => true,
-    creates => "${path}/${title}/${creates_dep}",
+    creates => "${path}/${appname}/${creates_dep}",
     require => Class['dopki'],
   }
 
@@ -61,9 +62,9 @@ define dorepos::getrepo (
   # if this getrepo defines a directory
   if ($symlinkdir) {
     # create symlink from directory to repo (e.g. user's home folder)
-    file { "${symlinkdir}/${title}":
+    file { "${symlinkdir}/${appname}":
       ensure => 'link',
-      target => "${path}/${title}",
+      target => "${path}/${appname}",
       require => Exec["clone-${title}"],
     }
   }
@@ -73,7 +74,7 @@ define dorepos::getrepo (
     exec { "update-${title}":
       path => '/usr/bin:/bin',
       provider => 'shell',
-      command => "bash -c 'source /home/${user}/.ssh/environment; cd ${path}/${title}; ${command_update}'",
+      command => "bash -c 'source /home/${user}/.ssh/environment; cd ${path}/${appname}; ${command_update}'",
       cwd => "/home/${user}",
       user => $user,
       group => $group,
@@ -85,9 +86,9 @@ define dorepos::getrepo (
 
   # set protected permissions on script files
   if ($force_perms_onsh) {
-    exec { "set-perms-onsh-${title}" :
+    exec { "set-perms-onsh-${appname}" :
       path => '/usr/bin:/bin',
-      command => "find ${path}/${title} -name '*.sh' -exec chmod 700 {} \\;",
+      command => "find ${path}/${appname} -h '*.sh' -exec chmod 700 {} \\;",
       require => Exec["update-${title}"],
     }
   }
