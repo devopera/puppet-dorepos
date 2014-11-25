@@ -6,6 +6,10 @@ Checkout and update repositories, optionally using Devopera public-key infrastru
 Changelog
 ---------
 
+2014-11-25
+
+  * Fixed find bug by removing deprecated -h flag, replaced with -name
+
 2014-06-04
 
   * SELinux port handling with docommon::seport
