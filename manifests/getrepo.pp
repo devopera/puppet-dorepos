@@ -88,7 +88,7 @@ define dorepos::getrepo (
   if ($force_perms_onsh) {
     exec { "set-perms-onsh-${appname}" :
       path => '/usr/bin:/bin',
-      command => "find ${path}/${appname} -h '*.sh' -exec chmod 700 {} \\;",
+      command => "find ${path}/${appname} -name '*.sh' -exec chmod 700 {} \\;",
       require => Exec["update-${title}"],
     }
   }
