@@ -6,6 +6,10 @@ Checkout and update repositories, optionally using Devopera public-key infrastru
 Changelog
 ---------
 
+2014-12-17
+
+  * Added copyout with arbitrary substitution to installapp
+
 2014-11-25
 
   * Fixed find bug by removing deprecated -h flag, replaced with -name
