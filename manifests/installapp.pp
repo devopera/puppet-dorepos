@@ -21,6 +21,7 @@ define dorepos::installapp (
   $byrepo_vhosts = undef,
   $byrepo_crontabs = undef,
   $byrepo_databases = undef,
+  $byrepo_files = {},
   $byrepo_filewriteable = {},
 
   # always refresh repo, host and vhost, even if notifier present
@@ -76,6 +77,16 @@ define dorepos::installapp (
   }
   if ($byrepo_filewriteable != {}) {
     create_resources(docommon::stickydir, $byrepo_filewriteable, $byrepo_filewriteable_defaults)
+  } 
+
+  # copyout files
+  $byrepo_files_defaults = {
+    user => $user,
+    require => Dorepos::Getrepo["$appname"],
+    before => File["puppet-installapp-$appname"],
+  }
+  if ($byrepo_files != {}) {
+    create_resources(docommon::filesadd, $byrepo_files, $byrepo_files_defaults)
   } 
 
   # dynamically seek out hosts and vhosts
