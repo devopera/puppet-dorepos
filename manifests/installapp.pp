@@ -22,6 +22,7 @@ define dorepos::installapp (
   $byrepo_crontabs = undef,
   $byrepo_databases = undef,
   $byrepo_files = {},
+  $byrepo_filesets = undef,
   $byrepo_filewriteable = {},
 
   # always refresh repo, host and vhost, even if notifier present
@@ -135,6 +136,31 @@ define dorepos::installapp (
     create_resources(docommon::filesadd, $byrepo_resolved_vhosts, $byrepo_vhosts_default)
   }
   
+  # install filesets using repo (sensitive) scripts
+  if ($install_filesets) {
+    notify { "installing filesets for ${appname}" : }
+
+    # find all nested copyout scripts
+    if ($byrepo_databases == undef) {
+      $byrepo_resolved_filesets = {
+        "all-filesets-in-one-${appname}" => {
+          directory => "${repo_path}/${name}/conf/",
+          wild => 'installapp_copyout.sh',
+        },
+      }
+    } else {
+      $byrepo_resolved_filesets = $byrepo_filesets
+    }
+    $byrepo_filesets_defaults = {
+      # copyout scripts need to be run as root to have access to all files
+      user => 'root',
+      require => Dorepos::Getrepo["$appname"],
+      before => File["puppet-installapp-${appname}"],
+    }
+    # execute copyout scripts everytime (no notifier on findrunonce)
+    create_resources(docommon::findrunonce, $byrepo_resolved_filesets, $byrepo_filesets_defaults)
+  }
+
   # consistent resource for later requirements
   file { "puppet-installapp-$appname" :
     path => "${notifier_dir}/puppet-installapp-$appname",
