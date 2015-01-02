@@ -141,7 +141,7 @@ define dorepos::installapp (
     notify { "installing filesets for ${appname}" : }
 
     # find all nested copyout scripts
-    if ($byrepo_databases == undef) {
+    if ($byrepo_filesets == undef) {
       $byrepo_resolved_filesets = {
         "all-filesets-in-one-${appname}" => {
           directory => "${repo_path}/${name}/conf/",
