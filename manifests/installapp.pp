@@ -129,7 +129,7 @@ define dorepos::installapp (
   # setup vhosts from repos
   $byrepo_vhosts_default = {
     purge => true,
-    require => Dorepos::Getrepo["$appname"],
+    require => [Dorepos::Getrepo["$appname"], Class['doapache']],
     before => File["puppet-installapp-$appname"],
   }
   if ($byrepo_resolved_vhosts != {}) {
