@@ -6,6 +6,10 @@ Checkout and update repositories, optionally using Devopera public-key infrastru
 Changelog
 ---------
 
+2015-06-20
+
+  * Can turn off vhosts so that installapp won't install them; useful if your vhost contains SSL cert references that don't exist.
+
 2014-12-17
 
   * Added copyout with arbitrary substitution to installapp

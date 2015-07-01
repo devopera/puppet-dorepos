@@ -40,6 +40,7 @@ define dorepos::installapp (
   $install_crontabs = false,
   $install_databases = false,
   $install_filesets = false,
+  $install_vhosts = true,
   
   # open up access to port
   $port = undef,
@@ -126,14 +127,19 @@ define dorepos::installapp (
     create_resources(docommon::filesadd, $byrepo_resolved_hosts, $byrepo_hosts_default)
   }
   
-  # setup vhosts from repos
-  $byrepo_vhosts_default = {
-    purge => true,
-    require => [Dorepos::Getrepo["$appname"], Class['doapache']],
-    before => File["puppet-installapp-$appname"],
-  }
-  if ($byrepo_resolved_vhosts != {}) {
-    create_resources(docommon::filesadd, $byrepo_resolved_vhosts, $byrepo_vhosts_default)
+  # if we're supposed to be installing vhosts in this run
+  if ($install_vhosts) {
+    notify { "installing vhosts for ${appname}" : }
+
+    # setup vhosts from repos
+    $byrepo_vhosts_default = {
+      purge => true,
+      require => [Dorepos::Getrepo["$appname"], Class['doapache']],
+      before => File["puppet-installapp-$appname"],
+    }
+    if ($byrepo_resolved_vhosts != {}) {
+      create_resources(docommon::filesadd, $byrepo_resolved_vhosts, $byrepo_vhosts_default)
+    }
   }
   
   # install filesets using repo (sensitive) scripts
