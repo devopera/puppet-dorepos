@@ -74,7 +74,7 @@ define dorepos::installapp (
     dirmode => 2770,
     groupfacl => 'rwx',
     recurse => true,
-    context => 'httpd_sys_content_t',
+    context => 'httpd_sys_rw_content_t',
     require => Dorepos::Getrepo["$appname"],
   }
   if ($byrepo_filewriteable != {}) {
