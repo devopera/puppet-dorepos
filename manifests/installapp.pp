@@ -139,6 +139,13 @@ define dorepos::installapp (
     }
     if ($byrepo_resolved_vhosts != {}) {
       create_resources(docommon::filesadd, $byrepo_resolved_vhosts, $byrepo_vhosts_default)
+      # remove welcome.conf because it can override
+      if !defined(File['dorepos-installapp-remove-welcome']) {
+        file { 'dorepos-installapp-remove-welcome':
+          path => '/etc/httpd/conf.d/welcome.conf',
+          ensure => absent,
+        }
+      }
     }
   }
   
