@@ -34,7 +34,7 @@ class dorepos (
     path => '/usr/bin:/bin',
     provider => 'shell',
     command => "bash -c 'source /home/${user}/.ssh/environment; expect -c \'ssh -T git@github.com\''",
-    require => [Package['git'], User['main-user'], Class['dopki']],
+    require => [Package['git'], User['main-user']],
   }
 
   # check out or update all the repos

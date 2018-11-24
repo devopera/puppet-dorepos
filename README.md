@@ -67,7 +67,6 @@ Setup dorepos, initially with an empty list of repositories (no repos checked ou
       user => 'web',
       user_git_name => 'devopera',
       user_git_email => 'devopera@example.com',
-      require => [Class['dopki'], Class['dopki::sshagentadd']],
     }
 
 After setup, checkout a repo

@@ -53,7 +53,8 @@ define dorepos::getrepo (
     timeout => 0,
     logoutput => true,
     creates => "${path}/${appname}/${creates_dep}",
-    require => Class['dopki'],
+    # only attempt the update if we've got an ssh agent (identified by .ssh/environment)
+    onlyif  => "test -e /home/${user}/.ssh/environment",
   }
 
   # no explicit perms on repo
@@ -81,6 +82,8 @@ define dorepos::getrepo (
       timeout => 0,
       logoutput => true,
       require => Exec["clone-${title}"],
+      # only attempt the update if we've got an ssh agent (identified by .ssh/environment)
+      onlyif  => "test -e /home/${user}/.ssh/environment",
     }
   }
 
