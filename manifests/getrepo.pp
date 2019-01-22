@@ -46,15 +46,14 @@ define dorepos::getrepo (
   exec { "clone-${title}":
     path => '/usr/bin:/bin',
     provider => 'shell',
-    command => "bash -c 'source /home/${user}/.ssh/environment; ${command_clone} ${source} ${path}/${appname} && cd ${path}/${appname} ${command_branch}'",
+    # need the test to fail quietly and happen at the same time as the command, not as part of a pre-run onlyif
+    command => "test -e /home/lightenn/.ssh/environment && bash -c 'source /home/${user}/.ssh/environment; ${command_clone} ${source} ${path}/${appname} && cd ${path}/${appname} ${command_branch}' || :",
     cwd => "/home/${user}",
     user => $user,
     group => $group,
     timeout => 0,
     logoutput => true,
     creates => "${path}/${appname}/${creates_dep}",
-    # only attempt the update if we've got an ssh agent (identified by .ssh/environment)
-    onlyif  => "test -e /home/${user}/.ssh/environment",
   }
 
   # no explicit perms on repo
@@ -75,15 +74,14 @@ define dorepos::getrepo (
     exec { "update-${title}":
       path => '/usr/bin:/bin',
       provider => 'shell',
-      command => "bash -c 'source /home/${user}/.ssh/environment; cd ${path}/${appname}; ${command_update}'",
+    # need the test to fail quietly and happen at the same time as the command, not as part of a pre-run onlyif
+      command => "test -e /home/${user}/.ssh/environment && bash -c 'source /home/${user}/.ssh/environment; cd ${path}/${appname}; ${command_update}' || :",
       cwd => "/home/${user}",
       user => $user,
       group => $group,
       timeout => 0,
       logoutput => true,
       require => Exec["clone-${title}"],
-      # only attempt the update if we've got an ssh agent (identified by .ssh/environment)
-      onlyif  => "test -e /home/${user}/.ssh/environment",
     }
   }
 
